@@ -3,52 +3,101 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.example.models;
+
+import com.sun.istack.NotNull;
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Set;
+import static javax.persistence.CascadeType.ALL;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author Mauricio
  */
-public class Competitor{
-     
-    
-    private String name;
-    
-    private String surname;
-    
-    private int age;
-    
-    private String telephone;
-    
-    private String cellphone;
-    
-    private String address;
-    
-    private String city;
-    
-    private String country;
-    
-    private boolean winner;
+@Entity
+public class Competitor implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+    //Se debe crear una llave primaria
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @NotNull
+    @Column(name = "createdAt", updatable = false)
+    @Temporal(TemporalType.DATE)
+    private Calendar createdAt;
+
+    @NotNull
+    @Column(name = "updatedAt")
+    @Temporal(TemporalType.DATE)
+    private Calendar updatedAt;
+
+    private String name;
+
+    private String surname;
+
+    private int age;
+
+    private String telephone;
+
+    private String cellphone;
+
+    private String address;
+
+    private String city;
+
+    private String country;
+
+    private boolean winner;
     
-    public Competitor(){
-        
+    private String password;
+    
+    private String email;
+
+    public Competitor() {
+
+    }
+
+    public Competitor(String nameN, String surnameN, int ageN, String telephoneN, String cellphoneN, String addressN, String cityN, String countryN, boolean winnerN) {
+        name = nameN;
+        surname = surnameN;
+        age = ageN;
+        telephone = telephoneN;
+        cellphone = cellphoneN;
+        address = addressN;
+        city = cityN;
+        country = countryN;
+        winner = winnerN;
     }
     
-    public Competitor(String nameN, String surnameN, int ageN,String telephoneN, String cellphoneN, String addressN, String  cityN, String countryN,boolean winnerN){
-        name=nameN;
-        surname=surnameN;
-        age=ageN;
-        telephone=telephoneN;
-        cellphone=cellphoneN;
-        address=addressN;
-        city=cityN;
-        country=countryN;
-        winner=winnerN;
+    public String getEmail(){
+        return email;
     }
     
-   
+    public void setEmail(String email){
+        this.email = email;
+    }
+    
+    public String getPassword(){
+        return password;
+    }
+    
+    public void setPassword(String password){
+        this.password = password;
+    }
+
     public String getName() {
         return name;
     }
@@ -120,5 +169,30 @@ public class Competitor{
     public void setWinner(boolean winner) {
         this.winner = winner;
     }
-    
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @PreUpdate
+    private void updateTimeStamp() {
+        this.updatedAt = Calendar.getInstance();
+    }
+
+    @PrePersist
+    private void creationTimeStamp() {
+        this.createdAt = Calendar.getInstance();
+    }
+
+    @OneToMany(cascade = ALL, mappedBy = "competitor")
+    private Set<Producto> products;
+
+    public Set<Producto> getProducts() {
+        return products;
+    }
+
 }
